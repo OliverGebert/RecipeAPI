@@ -1,66 +1,16 @@
-from http import HTTPStatus
+# from http import HTTPStatus
 
-from flask import Flask, jsonify, request
+from flask import Flask  # , jsonify, request
+from flask_restful import Api
+
+from resources.recipe import RecipeListResource, RecipePublishResource, RecipeResource
 
 app = Flask(__name__)
+api = Api(app)
 
-recipes = [
-    {"id": 1, "name": "Egg Salad", "description": "this is an egg salad recipe"},
-    {"id": 2, "name": "tomato pasta", "description": "this is a lovely pasta recipe"},
-]
-
-
-@app.route("/recipes", methods=["GET"])
-def get_recipes():
-    return jsonify({"data": recipes})
-
-
-@app.route("/recipes/<int:recipe_id>", methods=["GET"])
-def get_recipe(recipe_id):
-    recipe = next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
-    if recipe:
-        return jsonify(recipe)
-    return jsonify({"message": "recipe not found"}), HTTPStatus.NOT_FOUND
-
-
-@app.route("/recipes", methods=["POST"])
-def create_recipe():
-    data = request.get_json()
-
-    name = data.get("name")
-    description = data.get("description")
-
-    recipe = {"id": len(recipes) + 1, "name": name, "description": description}
-
-    recipes.append(recipe)
-    return jsonify(recipe), HTTPStatus.CREATED
-
-
-@app.route("/recipes/<int:recipe_id>", methods=["PUT"])
-def update_recipe(recipe_id):
-    recipe = next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
-    if not recipe:
-        return jsonify({"message": "recipe not found"}), HTTPStatus.NOT_FOUND
-
-    data = request.get_json()
-    recipe.update({"name": data.get("name"), "description": data.get("description")})
-    return jsonify(recipe)
-
-
-@app.route("/recipes/<int:recipe_id>", methods=["DELETE"])
-def delete_recipe(recipe_id):
-    recipe = next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
-    if not recipe:
-        return jsonify({"message": "recipe not found"}), HTTPStatus.NOT_FOUND
-
-    recipes.remove(recipe)
-    return jsonify(recipe), HTTPStatus.ACCEPTED
-
-
-@app.route("/")
-def hello():
-    return "hello World"
-
+api.add_resource(RecipeListResource, "/recipes")
+api.add_resource(RecipeResource, "/recipes/<int:recipe_id>")
+api.add_resource(RecipePublishResource, "/recipes/<int:recipe_id>/publish")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5000, debug=True)
