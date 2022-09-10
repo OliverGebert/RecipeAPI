@@ -1,9 +1,10 @@
 .Phony: all
 all: generate
 
-generate: *.drawio
-	printenv SHELL
-	/Applications/draw.io.app/Contents/MacOS/draw.io -x -f png -o ./ ./*.drawio
+generate: ContextView.png ComponentView.png
+
+%.png: %.drawio
+	/Applications/draw.io.app/Contents/MacOS/draw.io -x -f png -o $@ $<
 
 .Phony: clean
 clean:
