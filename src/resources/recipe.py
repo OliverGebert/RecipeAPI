@@ -17,20 +17,25 @@ class RecipeListResource(Resource):
         return {"data": data}, HTTPStatus.OK
 
     def post(self):
+        json_data = request.get_json()
 
-        data = request.get_json()
+        name = json_data.get("name")
+        description = json_data.get("description")
+        num_of_servings = json_data.get("num_of_servings")
+        cook_time = json_data.get("cook_time")
+        directions = json_data.get("directions")
 
         recipe = Recipe(
-            name=data["name"],
-            description=data["description"],
-            num_of_servings=data["num_of_servings"],
-            cook_time=data["cook_time"],
-            directions=data["directions"],
+            name=name,
+            description=description,
+            num_of_servings=num_of_servings,
+            cook_time=cook_time,
+            directions=directions,
         )
+        recipe.save()
+        data = {"name": recipe.name}
 
-        recipe_list.append(recipe)
-
-        return recipe.data, HTTPStatus.CREATED
+        return data, HTTPStatus.CREATED
 
 
 class RecipeResource(Resource):

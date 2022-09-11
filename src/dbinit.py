@@ -2,17 +2,19 @@ from app import create_app, db
 from models.recipe import Recipe
 from models.user import User
 
+# script to be run, in order to populate the db with user and recipes
+
 app = create_app()
 
 with app.app_context():
 
-    user = User(username="oli", email="bcgebert@arcor.de", password="oli")
+    user = User(username="Max", email="Max@arcor.de", password="oli")
 
     db.session.add(user)
     db.session.commit()
 
     pizza = Recipe(
-        name="cheese pizza",
+        name="max pizza",
         description="lovely pizza",
         num_of_servings=2,
         cook_time=30,
@@ -24,7 +26,7 @@ with app.app_context():
     db.session.commit()
 
     pasta = Recipe(
-        name="tomato pasta",
+        name="max pasta",
         description="easy pasta",
         num_of_servings=4,
         cook_time=25,

@@ -1,4 +1,6 @@
 venv/
-migrations/
+build/
 __pycache__/
 *.png
+*.pytest_cache
+*.egg-info

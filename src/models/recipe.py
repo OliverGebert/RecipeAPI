@@ -30,3 +30,7 @@ class Recipe(db.Model):
     )
 
     user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
